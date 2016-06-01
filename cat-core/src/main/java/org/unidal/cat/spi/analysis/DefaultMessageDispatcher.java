@@ -32,16 +32,21 @@ public class DefaultMessageDispatcher implements MessageDispatcher, TimeWindowHa
 	private List<Pipeline> m_lastPipelines;
 
 	private void dispatch(List<Pipeline> pipelines, MessageTree tree) {
+		String domain = tree.getDomain();
+		boolean hasFailure = false;
 		for (Pipeline pipeline : pipelines) {
-			String domain = tree.getDomain();
-
 			m_stateManager.addMessageTotal(domain, 1);
 
 			boolean success = pipeline.analyze(tree);
 
 			if (!success) {
-				m_stateManager.addMessageTotalLoss(domain, 1);
+				hasFailure = true;
 			}
+		}
+
+		// If multiple analyzers drop the same message tree, only one message will be counted as loss.
+		if (hasFailure) {
+			m_stateManager.addMessageTotalLoss(domain, 1);
 		}
 	}
 
@@ -67,8 +72,8 @@ public class DefaultMessageDispatcher implements MessageDispatcher, TimeWindowHa
 	}
 
 	@Override
-	public void onTimeWindowExit(int hour) {
-		// do nothing here
+	public void initialize() throws InitializationException {
+		m_timeWindowManager.register(this);
 	}
 
 	@Override
@@ -84,7 +89,7 @@ public class DefaultMessageDispatcher implements MessageDispatcher, TimeWindowHa
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
-		m_timeWindowManager.register(this);
+	public void onTimeWindowExit(int hour) {
+		// do nothing here
 	}
 }

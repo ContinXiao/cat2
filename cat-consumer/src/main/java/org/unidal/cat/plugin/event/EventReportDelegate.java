@@ -17,14 +17,19 @@ import com.dianping.cat.consumer.event.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
 
-@Named(type = ReportDelegate.class, value = EventConstants.ID)
+@Named(type = ReportDelegate.class, value = EventConstants.NAME)
 public class EventReportDelegate implements ReportDelegate<EventReport> {
-	@Inject(EventConstants.ID)
+	@Inject(EventConstants.NAME)
 	private ReportAggregator<EventReport> m_aggregator;
 
 	@Override
 	public EventReport aggregate(ReportPeriod period, Collection<EventReport> reports) {
 		return m_aggregator.aggregate(period, reports);
+	}
+
+	@Override
+	public EventReport makeAll(ReportPeriod period, Collection<EventReport> reports) {
+        return m_aggregator.makeAll(period, reports);
 	}
 
 	@Override
@@ -39,13 +44,9 @@ public class EventReportDelegate implements ReportDelegate<EventReport> {
 		return new EventReport(domain).setPeriod(period).setStartTime(startTime);
 	}
 
-	public EventReport getLocalReport(ReportPeriod period, Date startTime, String domain) {
-		return null;
-	}
-
 	@Override
 	public String getName() {
-		return EventConstants.ID;
+		return EventConstants.NAME;
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class DefaultReportConfiguration implements Initializable, ReportConfigur
 
 	@Override
 	public int getAnanlyzerCount(String name) {
-		return 1; // TODO
+		return 2; // TODO
 	}
 
 	@Override
@@ -66,5 +66,10 @@ public class DefaultReportConfiguration implements Initializable, ReportConfigur
 	@Override
 	public void setBaseDataDir(File baseDataDir) {
 		m_baseDataDir = baseDataDir;
+	}
+
+	@Override
+	public int getCheckpointThreads() {
+		return 3;
 	}
 }

@@ -2,12 +2,14 @@ package org.unidal.cat.spi.analysis.pipeline;
 
 import com.dianping.cat.message.spi.MessageTree;
 
-import java.io.IOException;
-
 public interface Pipeline {
-    public void initialize(int hour);
+	public void initialize(int hour);
 
-    public boolean analyze(MessageTree tree);
+	public void destroy();
 
-    public void checkpoint(boolean atEnd) throws IOException;
+	public boolean analyze(MessageTree tree);
+
+	public void checkpoint(boolean atEnd) throws Exception;
+
+	public String getName();
 }
